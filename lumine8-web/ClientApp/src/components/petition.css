@@ -1,0 +1,32 @@
+﻿body {
+    background-color: #2C2E6B;
+}
+
+.card {
+    margin: 1rem;
+    border-radius: 1rem;
+}
+
+.card-img-top {
+    width: 10rem;
+    height: auto;
+    margin: 1rem auto;
+}
+
+.card-body {
+    margin: 0;
+    border-radius: 0 0 1rem 1rem;
+}
+
+.card {
+    background-color: darkgrey;
+}
+
+.card-body {
+    background-color: #452b5e;
+    color: white;
+}
+
+p {
+    margin: 0;
+}
