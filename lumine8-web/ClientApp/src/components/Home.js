@@ -10,8 +10,8 @@ export class Home extends Component {
     }
 
     componentDidMount() {
+        document.title = "Home";
         document.body.style.backgroundColor = "#2C2E6B";
-        this.getPetitions();
     }
 
     render() {
@@ -139,12 +139,6 @@ export class Home extends Component {
                 </div>
             </div>
         );
-    }
-
-    async getPetitions() {
-        const response = await fetch('https://lumine8.com/api/GetPetitions');
-        const data = await response.json();
-        this.setState({ petitionModels: data.petitionModels, petitionSigs: data.petitionSigs, users: data.users });
     }
 
     searchPetitions(event) {

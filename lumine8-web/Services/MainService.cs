@@ -218,6 +218,7 @@ namespace lumine8.Server.Services
             }
         }
 
+        //Not tested. Might break the platform if used
         public override Task<Void2> DeleteAccount(LoginUser loginUser, ServerCallContext context)
         {
             var u = applicationDbContext.Users.Where(x => x.Username == loginUser.Username).FirstOrDefault();
@@ -2830,6 +2831,19 @@ namespace lumine8.Server.Services
             return Task.FromResult(model);
         }
 
+        public override Task<PetitionModel> DeletePetition(PetitionModel model, ServerCallContext context)
+        {
+            var u = applicationDbContext.Users.Where(x => x.Id == model.CreatedById).FirstOrDefault();
+            if (!Authorize(context, u.Username))
+                throw new System.Exception();
+
+            var m = applicationDbContext.Petitions.Where(x => x.PetitionId == model.PetitionId).FirstOrDefault();
+            applicationDbContext.Petitions.Remove(m);
+            applicationDbContext.SaveChanges();
+
+            return Task.FromResult(model);
+        }
+
         public override Task<PetitionSig> SignPetition(PetitionSig sig, ServerCallContext context)
         {
             var u = applicationDbContext.Users.Where(x => x.Id == sig.UserId).FirstOrDefault();
@@ -2844,6 +2858,36 @@ namespace lumine8.Server.Services
             }
             else
                 throw new System.Exception();
+        }
+
+        public override Task<PetitionSig> UnsignPetition(PetitionSig sig, ServerCallContext context)
+        {
+            var u = GetUserFromRequest(context);
+            if (!Authorize(context, u.Username))
+                throw new System.Exception();
+
+            var s = applicationDbContext.PetitionSigs.Where(x => x.PetitionId == sig.PetitionId && x.UserId == u.Id).FirstOrDefault();
+            if(s != null)
+            {
+                applicationDbContext.PetitionSigs.Remove(s);
+                applicationDbContext.SaveChanges();
+
+                return Task.FromResult(sig);
+            }
+            else
+                throw new System.Exception();
+        }
+
+        public override Task<VideoHomePage> GetVideoHomePage(Void2 void2, ServerCallContext context)
+        {
+            var likes = applicationDbContext.VideoLikes.Where(x => x.Like && x.LikeDate.ToDateTime() <= DateTime.Now.AddHours(24)).GroupBy(x => x.VideoId).Select(x => x.FirstOrDefault()).Take(200).ToList();
+            var vids = applicationDbContext.Videos.Where(x => likes.Any(y => y.VideoId == x.VideoId)).ToList();
+            
+            var model = new VideoHomePage();
+            model.Videos.AddRange(vids);
+            model.Likes.AddRange(likes);
+
+            return Task.FromResult(model);
         }
     }
 }

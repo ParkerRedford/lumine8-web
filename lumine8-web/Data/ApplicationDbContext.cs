@@ -196,6 +196,10 @@ namespace lumine8.Server.Data
             builder.Entity<Video>().Property(p => p.UploadDate).IsRequired().HasConversion(converter);
             builder.Entity<Video>().Property(p => p.VideoId).HasDefaultValueSql("gen_random_uuid()");
 
+            builder.Entity<VideoLike>().HasKey(k => k.VideoLikeId);
+            builder.Entity<VideoLike>().Property(p => p.LikeDate).IsRequired().HasConversion(converter);
+            builder.Entity<VideoLike>().Property(p => p.VideoLikeId).HasDefaultValue("gen_random_uuid()");
+
             builder.Entity<Subscribe>().HasKey(k => k.SubscribeId);
             builder.Entity<Subscribe>().Property(p => p.SubscribeId).HasDefaultValueSql("gen_random_uuid()");
 
@@ -386,6 +390,7 @@ namespace lumine8.Server.Data
         public DbSet<VideoComment> VideoComments { get; set; }
         public DbSet<VideoCommentOn> VideoCommentOns { get; set; }
         public DbSet<VideoRoom> VideoRooms { get; set; }
+        public DbSet<VideoLike> VideoLikes { get; set; }
 
         //Petitions
         public DbSet<PetitionModel> Petitions { get; set; }
