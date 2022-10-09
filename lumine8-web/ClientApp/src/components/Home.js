@@ -133,7 +133,7 @@ export class Home extends Component {
                     <div className="card-body">
                         <img style={{width: "3rem"}} src="/bootstrap-icons-1.9.0/github.svg" />
                         <a href="https://github.com/ParkerRedford/lumine8-client">Client</a>
-                        <a className="mx-2" href="https://github.com/ParkerRedford/lumine8-server">Server</a>
+                        <a className="mx-2" href="https://github.com/ParkerRedford/lumine8-web">Server</a>
                         <a href="https://github.com/ParkerRedford/lumine8-shared">Shared</a>
                     </div>
                 </div>
