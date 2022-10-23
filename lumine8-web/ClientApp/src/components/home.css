@@ -35,10 +35,9 @@ img {
     margin: 0;
 }
 
-a, .soon {
-    margin: auto !important;
-    margin-bottom: 0 !important;
-}
+    .link:hover {
+        color: #3975b8 !important;
+    }
 
 figure {
     margin: 0 1rem;
@@ -52,6 +51,8 @@ span {
 .card {
     margin: 1rem;
     border-radius: 1rem;
+    border: none;
+    background-color: #7a7a7a;
 }
 
 .card-img-top {
