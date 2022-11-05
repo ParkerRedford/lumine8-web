@@ -10,7 +10,7 @@ export class Petitions extends Component {
     }
 
     componentDidMount() {
-        document.title = "Petitios";
+        document.title = "Petitions";
         document.body.style.backgroundColor = "#2C2E6B";
         this.getPetitions();
     }

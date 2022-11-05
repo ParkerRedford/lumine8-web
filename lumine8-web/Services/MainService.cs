@@ -97,7 +97,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(new Authenticated { IsAuthenticated = (u != null) });
         }
 
-        public override Task<Void2> ChangePassword(LoginUser loginUser, ServerCallContext context)
+        public override Task<Empty> ChangePassword(LoginUser loginUser, ServerCallContext context)
         {
             var u = applicationDbContext.Users.Where(x => x.Username == loginUser.Username).FirstOrDefault();
             if (!Authorize(context, u.Username))
@@ -125,7 +125,7 @@ namespace lumine8.Server.Services
             applicationDbContext.Users.Update(au);
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
 
             /*var au = applicationDbContext.Users.Where(x => x.Id == u.Id).FirstOrDefault();
             
@@ -137,7 +137,7 @@ namespace lumine8.Server.Services
                 au.PasswordStamp = HashString(loginUser.Password, guid);
                 applicationDbContext.Users.Update(au);
                 applicationDbContext.SaveChanges();
-                return Task.FromResult(new Void2());
+                return Task.FromResult(new Empty());
             }
             else
                 throw new UnauthorizedAccessException();*/
@@ -219,7 +219,7 @@ namespace lumine8.Server.Services
         }
 
         //Not tested. Might break the platform if used
-        public override Task<Void2> DeleteAccount(LoginUser loginUser, ServerCallContext context)
+        public override Task<Empty> DeleteAccount(LoginUser loginUser, ServerCallContext context)
         {
             var u = applicationDbContext.Users.Where(x => x.Username == loginUser.Username).FirstOrDefault();
 
@@ -257,7 +257,7 @@ namespace lumine8.Server.Services
             applicationDbContext.Users.Remove(u);
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
         }
 
         /*****Profile*****/
@@ -291,7 +291,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(model);
         }
 
-        public override Task<IntroductionPageModel> GetIntroductionPageModel(Void2 void2, ServerCallContext context)
+        public override Task<IntroductionPageModel> GetIntroductionPageModel(Empty Empty, ServerCallContext context)
         {
             var u = GetUserFromRequest(context); ;
             if (!Authorize(context, u.Username))
@@ -343,7 +343,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(model);
         }
 
-        public override Task<Void2> UpdateAboutMe(AboutMe aboutMe, ServerCallContext context)
+        public override Task<Empty> UpdateAboutMe(AboutMe aboutMe, ServerCallContext context)
         {
             var user = applicationDbContext.Users.Where(x => x.Id == aboutMe.UserId).FirstOrDefault();
 
@@ -353,7 +353,7 @@ namespace lumine8.Server.Services
             applicationDbContext.AboutMe.Update(aboutMe);
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
         }
 
         public override Task<CategoryPageModel> GetCategoryModel(CategoryPageModelRequest cm, ServerCallContext context)
@@ -534,6 +534,8 @@ namespace lumine8.Server.Services
             if (request == null)
                 request = new Request();
 
+            var petitions = applicationDbContext.Petitions.Where(x => x.CreatedById == user.Id).ToList();
+
             var model = new ProfilePageModel { AboutMe = aboutMe, Friend = friend, ProfilePicture = pp, ProfileSecurity = profileSecurity, Request = request, SignedInUser = signedInUser, User = user };
             model.EducationList.AddRange(educationList);
             model.Friends.AddRange(friends);
@@ -546,6 +548,7 @@ namespace lumine8.Server.Services
             model.Roles.AddRange(roles);
             model.Rooms.AddRange(rooms);
             model.WorkHistories.AddRange(workHistories);
+            model.Petitions.AddRange(petitions);
 
             return Task.FromResult(model);
         }
@@ -642,7 +645,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(comment);
         }
 
-        public override Task<SearchPageModel> GetSearchPageModel(Void2 void2, ServerCallContext context)
+        public override Task<SearchPageModel> GetSearchPageModel(Empty Empty, ServerCallContext context)
         {
             var signedInUser = GetUserFromRequest(context);
             var users = applicationDbContext.Users.Where(x => x.Id != signedInUser.Id).ToList().Take(100);
@@ -776,7 +779,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(model);
         }
 
-        public override Task<SecurityPageModel> GetSecurityPageModel(Void2 void2, ServerCallContext context)
+        public override Task<SecurityPageModel> GetSecurityPageModel(Empty Empty, ServerCallContext context)
         {
             var ur = GetUserFromRequest(context);
             var profileSecurity = applicationDbContext.ProfileSecurities.Where(x => x.UserId == ur.Id).FirstOrDefault();
@@ -817,7 +820,7 @@ namespace lumine8.Server.Services
                 throw new System.Exception();
         }
 
-        public override Task<Void2> UpdateException(PrivateProfile privateProfile, ServerCallContext context)
+        public override Task<Empty> UpdateException(PrivateProfile privateProfile, ServerCallContext context)
         {
             var u = applicationDbContext.Users.Where(x => x.Id == privateProfile.UserId).FirstOrDefault();
 
@@ -827,7 +830,7 @@ namespace lumine8.Server.Services
             applicationDbContext.PrivateProfiles.Update(privateProfile);
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
         }
 
         public override Task<PrivateProfile> DeleteException(PrivateProfile privateProfile, ServerCallContext context)
@@ -1822,7 +1825,7 @@ namespace lumine8.Server.Services
         }
 
         /*****Home*****/
-        public override Task<IndexPageModel> GetIndexModel(Void2 void2, ServerCallContext context)
+        public override Task<IndexPageModel> GetIndexModel(Empty Empty, ServerCallContext context)
         {
             var ur = GetUserFromRequest(context);
 
@@ -2240,7 +2243,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(model);
         }
 
-        public override Task<Void2> UpdateAbout(UpdateAboutRequest about, ServerCallContext context)
+        public override Task<Empty> UpdateAbout(UpdateAboutRequest about, ServerCallContext context)
         {
             if (applicationDbContext.About.Where(x => x.AboutId == about.User.Id).FirstOrDefault() == null)
             {
@@ -2262,7 +2265,7 @@ namespace lumine8.Server.Services
 
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
         }
 
         public override Task<EducationRepsonse> GetEducation(Id id, ServerCallContext context)
@@ -2291,12 +2294,12 @@ namespace lumine8.Server.Services
             return Task.FromResult(education);
         }
 
-        public override Task<Void2> UpdateEducation(Education education, ServerCallContext context)
+        public override Task<Empty> UpdateEducation(Education education, ServerCallContext context)
         {
             applicationDbContext.EducationList.Update(education);
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
         }
 
         public override Task<InterestPageModel> GetInterestPageModel(Id id, ServerCallContext context)
@@ -2341,7 +2344,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(interests);
         }
 
-        public override Task<MainLayoutModel> GetMainLayoutModel(Void2 void2, ServerCallContext context)
+        public override Task<MainLayoutModel> GetMainLayoutModel(Empty Empty, ServerCallContext context)
         {
             var u = GetUserFromRequest(context);
 
@@ -2396,7 +2399,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(model);
         }
 
-        public override Task<Void2> DeleteNotifications(Void2 void2, ServerCallContext context)
+        public override Task<Empty> DeleteNotifications(Empty Empty, ServerCallContext context)
         {
             var u = GetUserFromRequest(context);
             if (!Authorize(context, u.Username))
@@ -2406,7 +2409,7 @@ namespace lumine8.Server.Services
             applicationDbContext.Notifications.RemoveRange(ns);
             applicationDbContext.SaveChanges();
 
-            return Task.FromResult(new Void2());
+            return Task.FromResult(new Empty());
         }
 
         public override Task<Notification> DeleteNotification(Notification notification, ServerCallContext context)
@@ -2802,7 +2805,7 @@ namespace lumine8.Server.Services
             return Task.FromResult(m);
         }
 
-        public override Task<PetitionsPageModel> GetPetitions(Void2 void2, ServerCallContext context)
+        public override Task<PetitionsPageModel> GetPetitions(Empty Empty, ServerCallContext context)
         {
             var petitions = applicationDbContext.Petitions.ToList();
             var sigs = applicationDbContext.PetitionSigs.ToList();
@@ -2878,7 +2881,7 @@ namespace lumine8.Server.Services
                 throw new System.Exception();
         }
 
-        public override Task<VideoHomePage> GetVideoHomePage(Void2 void2, ServerCallContext context)
+        public override Task<VideoHomePage> GetVideoHomePage(Empty Empty, ServerCallContext context)
         {
             var likes = applicationDbContext.VideoLikes.Where(x => x.Like && x.LikeDate.ToDateTime() <= DateTime.Now.AddHours(24)).GroupBy(x => x.VideoId).Select(x => x.FirstOrDefault()).Take(200).ToList();
             var vids = applicationDbContext.Videos.Where(x => likes.Any(y => y.VideoId == x.VideoId)).ToList();

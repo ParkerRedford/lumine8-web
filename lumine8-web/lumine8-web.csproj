@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lumine8\lumine8\Shared\lumine8.Shared.csproj" />
+    <ProjectReference Include="..\..\..\source\repos\Lumine8.Shared\Lumine8.Shared\Lumine8.Shared.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
