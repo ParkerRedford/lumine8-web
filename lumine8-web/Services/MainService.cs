@@ -84,9 +84,9 @@ namespace lumine8.Server.Services
             return new SharedUser();
         }
 
-        public override Task<Boolean2> CheckVersion(Id id, ServerCallContext context)
+        public override Task<BoolValue> CheckVersion(Id id, ServerCallContext context)
         {
-            return Task.FromResult(new Boolean2 { Bool = ("3d9ca813-6f37-40f9-8735-95e2257f0f6a" == id.Id_) });
+            return Task.FromResult(new BoolValue { Value = ("3d9ca813-6f37-40f9-8735-95e2257f0f6a" == id.Id_) });
         }
 
         public override Task<Authenticated> Authenticate(LoginUser loginUser, ServerCallContext context)
